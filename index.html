@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#355b43">
+<title>دفتر دعای من</title>
+<style>
+:root{--green:#355b43;--green2:#58775d;--cream:#f6f3e8;--paper:#fffdf7;--line:#dce3d4;--ink:#24372a;--muted:#68776a;--rose:#a66f65}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:Tahoma,"Segoe UI",sans-serif;line-height:1.8}
+header{background:linear-gradient(135deg,#294c37,#628268);color:white;padding:26px 18px 24px;border-radius:0 0 28px 28px}
+.wrap{max-width:780px;margin:auto;padding:0 15px}h1{margin:0;font-size:1.65rem}header p{margin:5px 0 0;color:#edf4e8}
+main{padding:18px 0 38px}.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:17px;margin-bottom:15px;box-shadow:0 5px 18px #2b4a3010}
+h2{font-size:1.08rem;margin:0 0 12px;color:var(--green)}label{display:block;font-size:.9rem;font-weight:bold;margin:10px 0 5px}
+input,select,textarea{width:100%;border:1px solid #cbd7c8;border-radius:11px;padding:12px;background:#fffefb;color:var(--ink);font:inherit;outline-color:var(--green2)}
+textarea{min-height:100px;resize:vertical} .small{min-height:64px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+button,.filebtn{border:0;border-radius:11px;padding:10px 14px;font:inherit;font-weight:bold;cursor:pointer;background:var(--green);color:white}
+button.secondary,.filebtn.secondary{background:#e8eee3;color:var(--green)}button.danger{background:#f7e9e5;color:#8a3f36}button:active{transform:scale(.98)}
+.toprow{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.count{font-size:.85rem;color:var(--muted)}
+.prayer{border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:10px;background:#fffefb}.prayer h3{margin:0 0 8px;color:var(--green);font-size:1rem}.arabic{font-family:"Times New Roman",serif;font-size:1.2rem;line-height:2;text-align:center;color:#294c37;white-space:pre-wrap}.translation{white-space:pre-wrap}.meta{color:var(--muted);font-size:.8rem;margin-top:7px}.prayer-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.prayer-actions button{font-size:.82rem;padding:7px 10px}
+.empty{text-align:center;color:var(--muted);padding:20px 5px}.hint{font-size:.82rem;color:var(--muted);margin:7px 0 0}
+.fileinput{display:none}.notice{display:none;padding:10px;border-radius:10px;background:#e7f0e4;color:#2c5738;margin-bottom:12px;font-size:.9rem}
+footer{text-align:center;color:var(--muted);font-size:.8rem;padding:10px 0 28px}
+@media(max-width:520px){.grid{grid-template-columns:1fr}header{padding-top:22px}.card{padding:14px}h1{font-size:1.45rem}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<h1>🌿 دفتر دعای من</h1>
+<p>حرف‌های دلم با خدا · ساده، خصوصی و آرامش‌بخش</p>
+</div></header>
+<main class="wrap">
+<div id="notice" class="notice"></div>
+<section class="card">
+<h2>✍️ افزودن دعا</h2>
+<form id="prayerForm">
+<input type="hidden" id="editId">
+<label for="title">نام دعا یا عنوان دلخواه</label>
+<input id="title" placeholder="مثلاً دعای آرامش قلب">
+<div class="grid">
+<div><label for="category">دسته‌بندی</label>
+<select id="category"><option>دعاهای قرآنی</option><option>آمرزش و توبه</option><option>آرامش و رفع نگرانی</option><option>رزق و گشایش</option><option>خانواده و عزیزان</option><option>حفاظت و سلامتی</option><option>مناجات و اذکار</option><option>سایر دعاها</option></select></div>
+<div><label for="source">منبع (اختیاری)</label><input id="source" placeholder="مثلاً قرآن، سوره بقره ۱۲۷"></div>
+</div>
+<label for="arabic">متن عربی یا متن اصلی</label>
+<textarea id="arabic" placeholder="متن دعا را اینجا بنویس یا از جایی کپی و جای‌گذاری کن…"></textarea>
+<label for="pronunciation">تلفظ فارسی (اختیاری)</label>
+<textarea id="pronunciation" class="small" placeholder="تلفظ دعا با حروف فارسی"></textarea>
+<label for="translation">ترجمه یا زیرنویس فارسی</label>
+<textarea id="translation" class="small" placeholder="معنی فارسی دعا را اینجا بنویس…"></textarea>
+<div class="actions"><button type="submit" id="saveBtn">ذخیره دعا</button><button type="button" class="secondary" id="clearBtn">پاک‌کردن فرم</button></div>
+<p class="hint">می‌توانی متن را مستقیم بنویسی یا از کتاب، سایت یا یادداشت‌ها کپی کنی و اینجا جای‌گذاری کنی.</p>
+</form>
+</section>
+<section class="card">
+<div class="toprow"><h2 style="margin:0">📖 دعاهای من</h2><span id="count" class="count">۰ دعا</span></div>
+<label for="search">جست‌وجو در دعاها</label><input id="search" placeholder="نام دعا، متن یا دسته‌بندی…">
+<div class="actions">
+<button type="button" class="secondary" id="exportBtn">خروجی پشتیبان</button>
+<label class="filebtn secondary" for="importFile" style="margin:0">واردکردن پشتیبان</label><input class="fileinput" type="file" id="importFile" accept=".json,application/json">
+</div>
+<div id="list"></div>
+</section>
+<footer>ذخیره‌سازی روی همین مرورگر انجام می‌شود. برای نگهداری مطمئن، هر از گاهی «خروجی پشتیبان» بگیر. 🤍</footer>
+</main>
+<script>
+const KEY='daftar-doa-v1';
+const $=id=>document.getElementById(id);
+let prayers=[];
+try{prayers=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(prayers))prayers=[]}catch(e){prayers=[]}
+const faNum=n=>String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(prayers));return true}catch(e){show('ذخیره‌سازی مرورگر در دسترس نیست؛ لطفاً خروجی پشتیبان بگیر.');return false}}
+function show(msg){$('notice').textContent=msg;$('notice').style.display='block';setTimeout(()=>$('notice').style.display='none',3500)}
+function clearForm(){$('prayerForm').reset();$('editId').value='';$('saveBtn').textContent='ذخیره دعا'}
+function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+$('prayerForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ const item={id:$('editId').value||String(Date.now())+'-'+Math.random().toString(36).slice(2,7),title:$('title').value.trim()||'دعای بدون عنوان',category:$('category').value,source:$('source').value.trim(),arabic:$('arabic').value.trim(),pronunciation:$('pronunciation').value.trim(),translation:$('translation').value.trim(),updated:new Date().toISOString()};
+ if(!item.arabic&&!item.translation){show('لطفاً متن دعا یا ترجمه‌اش را وارد کن.');return}
+ const i=prayers.findIndex(p=>p.id===item.id);if(i>=0)prayers[i]=item;else prayers.unshift(item);
+ persist();render();clearForm();show(i>=0?'دعا ویرایش شد.':'دعا ذخیره شد. 🌿');
+});
+$('clearBtn').addEventListener('click',clearForm);
+$('search').addEventListener('input',render);
+function render(){
+ const q=$('search').value.trim().toLowerCase();
+ const found=prayers.filter(p=>[p.title,p.category,p.source,p.arabic,p.pronunciation,p.translation].join(' ').toLowerCase().includes(q));
+ $('count').textContent=faNum(prayers.length)+' دعا';
+ if(!found.length){$('list').innerHTML='<div class="empty">'+(prayers.length?'دعایی با این جست‌وجو پیدا نشد.':'هنوز دعایی ذخیره نکرده‌ای. اولین دعا را از فرم بالا اضافه کن. 🌱')+'</div>';return}
+ $('list').innerHTML=found.map(p=>`<article class="prayer"><h3>${esc(p.title)}</h3><div class="meta">${esc(p.category)}${p.source?' · منبع: '+esc(p.source):''}</div>${p.arabic?'<label>متن اصلی</label><div class="arabic" dir="rtl">'+esc(p.arabic)+'</div>':''}${p.pronunciation?'<label>تلفظ فارسی</label><div class="translation">'+esc(p.pronunciation)+'</div>':''}${p.translation?'<label>ترجمه فارسی</label><div class="translation">'+esc(p.translation)+'</div>':''}<div class="prayer-actions"><button class="secondary" data-edit="${esc(p.id)}">ویرایش</button><button class="secondary" data-copy="${esc(p.id)}">کپی متن</button><button class="danger" data-delete="${esc(p.id)}">حذف</button></div></article>`).join('');
+}
+$('list').addEventListener('click',async e=>{
+ const b=e.target.closest('button');if(!b)return;const p=prayers.find(x=>x.id===b.dataset.edit||x.id===b.dataset.copy||x.id===b.dataset.delete);if(!p)return;
+ if(b.dataset.edit){$('editId').value=p.id;$('title').value=p.title;$('category').value=p.category;$('source').value=p.source;$('arabic').value=p.arabic;$('pronunciation').value=p.pronunciation;$('translation').value=p.translation;$('saveBtn').textContent='ذخیره تغییرات';window.scrollTo({top:0,behavior:'smooth'})}
+ if(b.dataset.delete){if(confirm('این دعا حذف شود؟')){prayers=prayers.filter(x=>x.id!==p.id);persist();render();show('دعا حذف شد.')}}
+ if(b.dataset.copy){const text=[p.title,p.arabic,p.pronunciation,p.translation,p.source?'منبع: '+p.source:''].filter(Boolean).join('\n\n');try{await navigator.clipboard.writeText(text);show('متن دعا کپی شد.')}catch(err){prompt('متن دعا را کپی کن:',text)}}
+});
+$('exportBtn').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(prayers,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='daftar-doa-backup.json';a.click();URL.revokeObjectURL(url);show('فایل پشتیبان آماده شد.')});
+$('importFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const data=JSON.parse(await f.text());if(!Array.isArray(data))throw Error();const clean=data.filter(x=>x&&typeof x==='object').map(x=>({...x,id:String(x.id||Date.now()+Math.random())}));if(confirm('دعاهای فایل به فهرست فعلی اضافه شوند؟')){const ids=new Set(prayers.map(p=>p.id));clean.forEach(p=>{if(!ids.has(p.id))prayers.push(p)});persist();render();show('پشتیبان وارد شد.')}}catch(err){show('فایل پشتیبان معتبر نیست.')}e.target.value=''});
+
+const STARTER_PRAYERS = [
+ {id:"starter-1",title:"دعای آمرزش و پناه از آتش",category:"دعاهای قرآنی",source:"قرآن کریم، آل‌عمران ۱۶",arabic:"رَبَّنَا إِنَّنَا آمَنَّا فَاغْفِرْ لَنَا ذُنُوبَنَا وَقِنَا عَذَابَ النَّارِ",pronunciation:"رَبَّنا اِنَّنا آمَنّا، فَاغفِر لَنا ذُنوبَنا وَ قِنا عَذابَ النّار.",translation:"پروردگارا، ما ایمان آورده‌ایم؛ پس گناهانمان را ببخش و ما را از عذاب آتش حفظ کن."},
+ {id:"starter-2",title:"دعای پذیرش اعمال",category:"دعاهای قرآنی",source:"قرآن کریم، بقره ۱۲۷",arabic:"رَبَّنَا تَقَبَّلْ مِنَّا إِنَّكَ أَنْتَ السَّمِيعُ الْعَلِيمُ",pronunciation:"رَبَّنا تَقَبَّل مِنّا، اِنَّکَ اَنتَ السَّمیعُ العَلیم.",translation:"پروردگارا، از ما بپذیر؛ همانا تو شنونده و دانایی."},
+ {id:"starter-3",title:"دعای هدایت و رحمت",category:"دعاهای قرآنی",source:"قرآن کریم، کهف ۱۰",arabic:"رَبَّنَا آتِنَا مِنْ لَدُنْكَ رَحْمَةً وَهَيِّئْ لَنَا مِنْ أَمْرِنَا رَشَدًا",pronunciation:"رَبَّنا آتِنا مِن لَدُنکَ رَحمَةً، وَ هَیِّئ لَنا مِن أَمرِنا رَشَداً.",translation:"پروردگارا، از جانب خود رحمتی به ما عطا کن و در کارمان راه درست و هدایت را برایمان فراهم ساز."},
+ {id:"starter-4",title:"دعای حضرت یونس (ع)",category:"آمرزش و توبه",source:"قرآن کریم، انبیاء ۸۷",arabic:"لَا إِلَٰهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ",pronunciation:"لا اِلهَ اِلّا اَنتَ، سُبحانَکَ، اِنّی کُنتُ مِنَ الظّالِمین.",translation:"معبودی جز تو نیست؛ تو منزّه و پاکی؛ همانا من از ستمکاران بودم."},
+ {id:"starter-5",title:"دعای خیر دنیا و آخرت",category:"دعاهای قرآنی",source:"قرآن کریم، بقره ۲۰۱",arabic:"رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",pronunciation:"رَبَّنا آتِنا فِی الدُّنیا حَسَنَةً، وَ فِی الآخِرَةِ حَسَنَةً، وَ قِنا عَذابَ النّار.",translation:"پروردگارا، در دنیا به ما نیکی عطا کن و در آخرت نیز به ما نیکی عطا کن و ما را از عذاب آتش حفظ فرما."},
+ {id:"starter-6",title:"دعای حضرت موسی (ع)",category:"دعاهای قرآنی",source:"قرآن کریم، قصص ۲۴",arabic:"رَبِّ إِنِّي لِمَا أَنْزَلْتَ إِلَيَّ مِنْ خَيْرٍ فَقِيرٌ",pronunciation:"رَبِّ اِنّی لِما أَنزَلتَ إِلَیَّ مِن خَیرٍ فَقیر.",translation:"پروردگارا، من به هر خیری که به سویم بفرستی، سخت نیازمندم."},
+ {id:"starter-7",title:"دعای نزدیکی خداوند",category:"مناجات و اذکار",source:"طبق عبارت ارسالی کاربر؛ منبع نیازمند تطبیق",arabic:"يَا مَنْ هُوَ أَقْرَبُ إِلَيَّ مِنْ حَبْلِ الْوَرِيدِ، يَا مَنْ يَحُولُ بَيْنَ الْمَرْءِ وَقَلْبِهِ، يَا مَنْ هُوَ بِالْمَنْظَرِ الْأَعْلَى، يَا مَنْ لَيْسَ كَمِثْلِهِ شَيْءٌ",pronunciation:"یا مَن هُوَ أَقرَبُ إِلَیَّ مِن حَبلِ الوَرید...",translation:"ای آن‌که از رگ گردن به من نزدیک‌تری؛ ای آن‌که میان انسان و قلب او حائل می‌شوی؛ ای آن‌که در مرتبه‌ی برتر و بلندایی؛ ای آن‌که هیچ‌چیزی همانند او نیست."},
+ {id:"starter-8",title:"دعای فضل و بخشش",category:"مناجات و اذکار",source:"مفاتیح الجنان؛ اعمال نقل‌شده",arabic:"يَا دَائِمَ الْفَضْلِ عَلَى الْبَرِيَّةِ، يَا بَاسِطَ الْيَدَيْنِ بِالْعَطِيَّةِ، يَا صَاحِبَ الْمَوَاهِبِ السَّنِيَّةِ، صَلِّ عَلَى مُحَمَّدٍ وَآلِهِ خَيْرِ الْوَرَى سَجِيَّةً، وَاغْفِرْ لَنَا يَا ذَا الْعُلَى فِي هَذِهِ الْعَشِيَّةِ",pronunciation:"یا دائِمَ الفَضلِ عَلَی البَرِیَّة، یا باسِطَ الیَدَینِ بِالعَطِیَّة...",translation:"ای آن‌که فضل و بخششت بر آفریدگان همیشگی است؛ ای صاحب بخشش‌های ارزشمند؛ بر محمد و خاندانش درود فرست و ما را ببخش."},
+ {id:"starter-9",title:"آیه درباره نفس و آمرزش",category:"قرآنی",source:"قرآن کریم، یوسف ۵۳",arabic:"وَمَا أُبَرِّئُ نَفْسِي إِنَّ النَّفْسَ لَأَمَّارَةٌ بِالسُّوءِ إِلَّا مَا رَحِمَ رَبِّي إِنَّ رَبِّي غَفُورٌ رَحِيمٌ",pronunciation:"وَ ما أُبَرِّئُ نَفسی، اِنَّ النَّفسَ لَأَمّارَةٌ بِالسّوءِ، اِلّا ما رَحِمَ رَبّی...",translation:"من خود را تبرئه نمی‌کنم؛ چراکه نفس بسیار به بدی فرمان می‌دهد، مگر آن‌که پروردگارم رحم کند. همانا پروردگارم آمرزنده و مهربان است."},
+ {id:"starter-10",title:"دعای «إلهي عاملنا بفضلك»",category:"مناجات و اذکار",source:"عبارت ارسالی کاربر؛ لفظ دقیق نیازمند بررسی منبع",arabic:"إِلَهِي، عَامِلْنَا بِفَضْلِكَ وَلَا تُعَامِلْنَا بِعَدْلِكَ",pronunciation:"اِلهی، عامِلنا بِفَضلِکَ وَ لا تُعامِلنا بِعَدلِک.",translation:"خدای من، با فضل و بخشش خود با ما رفتار کن."}
+];
+if (!localStorage.getItem(KEY)) {
+ try { localStorage.setItem(KEY, JSON.stringify(STARTER_PRAYERS)); } catch(e) {}
+}
+
+render();
+</script>
+</body></html>
